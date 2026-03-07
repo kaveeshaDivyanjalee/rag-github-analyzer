@@ -54,21 +54,24 @@ st.divider()
 with st.sidebar:
     st.header("⚙️ Configuration")
 
-    api_key = st.text_input(
-        "Groq API Key",
-        type="password",
-        value=os.getenv("GROQ_API_KEY", ""),
-        help="Free API key from console.groq.com"
-)
+    # Load API key — works both locally (.env) and deployed (Streamlit Secrets)
+    api_key = os.getenv("GROQ_API_KEY", "")
+    if not api_key:
+        try:
+            api_key = st.secrets.get("GROQ_API_KEY", "")
+        except Exception:
+            api_key = ""
+
     if api_key:
         os.environ["GROQ_API_KEY"] = api_key
+
     st.divider()
     st.markdown("### 📌 How it works")
     st.markdown("""
 1. Enter a public GitHub repo URL
 2. Repo is cloned & code files are loaded
 3. Files are chunked & embedded into FAISS
-4. Claude analyzes code for errors via RAG
+4. LLaMA 3.3 analyzes code for errors via RAG
 5. Results shown with source file references
     """)
     st.divider()
@@ -99,7 +102,7 @@ st.divider()
 # ── Analysis ─────────────────────────────────────────────────────────────────
 if analyze_btn:
     if not api_key:
-        st.error("❌ Please enter your Groq API key in the sidebar.")
+        st.error("❌ API key not configured. Please contact the app owner.")
         st.stop()
 
     if not github_url.strip():
