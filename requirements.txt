@@ -10,4 +10,8 @@ gitpython>=3.1.43
 python-dotenv>=1.0.1
 tiktoken>=0.6.0
 sentence-transformers>=2.7.0
+<<<<<<< HEAD
 torch>=2.0.0
+=======
+torch>=2.0.0
+>>>>>>> ffe7c86b03f86d280602dd9672c47f367139be04
